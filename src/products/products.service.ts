@@ -11,7 +11,7 @@ import { RpcException } from '@nestjs/microservices';
 @Injectable()
 export class ProductsService extends PrismaClient implements OnModuleInit {
 
-	private readonly logger = new Logger('ProductsMicroService');
+	private readonly logger = new Logger('ProductService');
 
 	onModuleInit() {
 		this.$connect();
@@ -53,7 +53,7 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
 
 	async findOne(id: number) {
 
-		const product = await this.product.findUnique({
+		const product = await this.product.findFirst({
 			where: {
 				id,
 				available: true
@@ -63,7 +63,7 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
 		if (!product) {
 			throw new RpcException({
 				message: `Product with id ${id} not found`,
-				status: HttpStatus.BAD_REQUEST
+				status: HttpStatus.NOT_FOUND
 			});
 		}
 
